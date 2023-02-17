@@ -3,7 +3,7 @@ import { createGlobalStyle } from "styled-components";
 const GlobalStyle = createGlobalStyle`
 
   * {
-    box-sizing: border-box;
+    /* box-sizing: border-box; */
     padding: 0;
     margin: 0;
     text-decoration: none;
@@ -24,8 +24,9 @@ const GlobalStyle = createGlobalStyle`
   #root {
     width: 390px;
     height: 100vh;
-    border: 1px solid red;
-
+    box-sizing: content-box;
+    box-shadow: 0 0 20px rgb(0 0 0 / 5%);
+    
   }
 `;
 

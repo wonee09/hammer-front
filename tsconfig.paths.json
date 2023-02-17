@@ -12,6 +12,7 @@
       "@shared/*": ["src/shared/*"],
       "@utils/*": ["src/utils/*"],
       "@styles/*": ["src/styles/*"],
+      "@api/*": ["src/api/*"],
       "@contexts/*": ["src/contexts/*"]
     }
   }

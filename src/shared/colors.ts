@@ -3,4 +3,5 @@ export const colors = new Map([
   ["teal", "teal"],
   ["orange", "#FE531F"],
   ["white", "#ffffff"],
+  ["mainPurple", "#6A3CB0"],
 ]);

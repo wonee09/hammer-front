@@ -11,6 +11,7 @@ import EditPost from "@pages/EditPost";
 import Post from "@pages/Post";
 import PostList from "@pages/PostList";
 import RequestBuildingRegister from "@pages/RequestBuildingRegister";
+import SendAuthMail from "@pages/SendAuthMail";
 
 const Router = () => {
   return (
@@ -55,6 +56,15 @@ const Router = () => {
           element={
             <UserNotAccess>
               <Login />
+            </UserNotAccess>
+          }
+        />
+        {/* EmailAuth : no authentication, but mush have props from previous page */}
+        <Route
+          path="/emailAuth"
+          element={
+            <UserNotAccess>
+              <SendAuthMail />
             </UserNotAccess>
           }
         />

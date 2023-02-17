@@ -5,7 +5,6 @@ import Header from "@components/Header";
 
 // 로그인 했을 경우의 Layout
 const Layout = ({ children, bgColor = "#fff" }: any) => {
-  console.log(1111);
   return (
     <>
       <Header />
@@ -22,5 +21,5 @@ export default Layout;
 const StLayout = styled.div<{ bgColor: string }>`
   /* height: calc(100vh - 45px); */
   background-color: ${({ bgColor }) => bgColor};
-  padding: 24px;
+  /* padding: 24px; */
 `;
