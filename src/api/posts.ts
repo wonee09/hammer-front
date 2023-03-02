@@ -25,4 +25,18 @@ const getComments = async (postId: string) => {
   return response.data.data;
 };
 
-export { getPosts, getComments };
+const addComment = async (commentObj: any) => {
+  const response = await axios.post(
+    "http://localhost:3018/api/comment",
+    commentObj,
+    {
+      withCredentials: true,
+    }
+  );
+
+  console.log("response1231232", response.data.data);
+
+  return response.data.data;
+};
+
+export { getPosts, getComments, addComment };

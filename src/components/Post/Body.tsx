@@ -3,12 +3,19 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
-import { useQuery } from "react-query";
-import { getComments } from "@api/posts";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { getComments, addComment } from "@api/posts";
 
 const Body = () => {
   const location = useLocation();
   const navigate = useNavigate();
+
+  const queryClient = useQueryClient();
+  const { mutate, data: mutationData } = useMutation(addComment, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("comments");
+    },
+  });
 
   const address = location.state.address;
   const item = location.state.item;
@@ -75,15 +82,11 @@ const Body = () => {
             comment,
           };
 
-          const response = await axios.post(
-            "http://localhost:3018/api/comment",
-            commentObj,
-            {
-              withCredentials: true,
-            }
-          );
-
-          console.log("response => ", response);
+          try {
+            mutate(commentObj);
+          } catch (err) {
+            console.log("err");
+          }
         }}
       >
         <div
@@ -108,10 +111,28 @@ const Body = () => {
           <button>등록</button>
         </div>
       </form>
-      <div>
-        {/* {data.map(comment => {
-            return (<div></div)
-        })} */}
+      <div style={{ height: "450px", overflow: "auto" }}>
+        {data.map((comment: any) => {
+          return (
+            <div
+              key={comment.id}
+              style={{
+                height: "47px",
+                background: "#F7F2FF",
+                margin: "3px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                paddingLeft: "10px",
+              }}
+            >
+              <p>{comment.contents}</p>
+              <span>
+                {comment.writerId} | {comment.createdAt}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </StyledBody>
   );
