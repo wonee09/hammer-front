@@ -8,6 +8,7 @@ import AgreementArea from "@components/SignUp/AgreementArea";
 import { useInput } from "@hooks/useInput";
 import { useEffect, useState } from "react";
 import PurpleButton from "@elem/button/PurpleButton";
+import { axiosSignUp } from "@api/users";
 import axios from "axios";
 
 const Body = () => {
@@ -61,15 +62,15 @@ const Body = () => {
         password: input.password,
         nickName: "testNickName",
       };
-      alert("검증 성공!");
 
       try {
-        const response = await axios.post(
-          "http://localhost:3018/api/users/",
-          userInfo
-        );
+        // const response = await axios.post(
+        //   "http://localhost:3018/api/users/",
+        //   userInfo
+        // );
+        axiosSignUp(userInfo);
 
-        console.log("통신 성공!", response);
+        // console.log("통신 성공!", response);
       } catch (error) {
         console.log("오류 발생 !", error);
       }

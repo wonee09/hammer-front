@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import AddLocationAltIcon from "@mui/icons-material/AddLocationAlt";
 import { colors } from "@shared/colors";
-import { getBuildings } from "@api/building";
+import { axiosGetBuildings } from "@api/building";
 import { useMutation, useQuery } from "react-query";
 import { Map, MapMarker, CustomOverlayMap } from "react-kakao-maps-sdk";
 import CloseIcon from "@mui/icons-material/Close";
@@ -10,7 +10,7 @@ import CloseIcon from "@mui/icons-material/Close";
 const Body = () => {
   const { isLoading, isError, data, error } = useQuery(
     "buildings",
-    getBuildings
+    axiosGetBuildings
   );
 
   const [state, setState] = useState({
@@ -20,13 +20,12 @@ const Body = () => {
     isPanto: true,
   });
 
-  const mutation = useMutation(async () => {
-    
-  }, {
-    onSuccess: () => {
-      console.log('...')
-    }
-  })
+  // mutation 작업은 나중에
+  // const mutation = useMutation(async () => {}, {
+  //   onSuccess: () => {
+  //     console.log("...");
+  //   },
+  // });
 
   // 마커 선택 시 관리하기 위한 state정의
   const [selectedMakerId, setSelectedMarkerId] = useState("");

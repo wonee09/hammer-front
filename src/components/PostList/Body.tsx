@@ -3,16 +3,14 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useQuery } from "react-query";
-import { getPosts } from "@api/posts";
+import { axiosGetPosts } from "@api/posts";
 import { useEffect } from "react";
-import { appendFile } from "fs/promises";
 
 const Body = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
   const address = location.state.address;
-  console.log("LOCATION ===> ", location);
 
   const formatDate = (str: string) => {
     let result = str.substring(0, 20);
@@ -30,7 +28,7 @@ const Body = () => {
   // 2. useMutate : 수정, 삭제, 추가(CUD) -> invalidate + Query
   const { isLoading, isError, error, data, refetch } = useQuery(
     "postList",
-    () => getPosts(address.id, searchValue)
+    () => axiosGetPosts(address.id, searchValue)
   );
 
   useEffect(() => {

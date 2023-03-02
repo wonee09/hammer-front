@@ -4,24 +4,12 @@ import HeightBox from "@elem/HeightBox";
 import styled from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { axiosAddBuilding } from "@api/building";
 
 const Body = () => {
   const navigate = useNavigate();
 
-  const [address, setAddress] = useState({});
-
   const handleComplete = async (data: any) => {
-    // 필요한 데이터
-    // buildingName(건물이름)
-    // mainBuildingNo(메인건물이름)
-    // subBuildingNo(서브건물이름)
-    // roadName(도로명이름)
-    // totalRoadAddress(전체도로명주소)
-    // undergroundYn(지하여부)
-    // xLoc(위도)
-    // yLoc(경도)
-    // zoneNo(우편번호)
-
     // 의미 있는 데이터로 좀 바꾸긴 해야할 것 같다.
     // 시군구 정보, 법정동 정보 등 저장해야 해당 지역별로 통계자로 등 뽑기 편할 듯
     const addressObj = {
@@ -53,20 +41,18 @@ const Body = () => {
       addressObj.xLoc = xLoc;
       addressObj.yLoc = yLoc;
 
-      //   setAddress({ ...addressObj });
-
-      const address = await axios.post(
-        "http://localhost:3018/api/address",
-        addressObj,
-        {
-          withCredentials: true,
-        }
-      );
-      navigate("/posts", {
-        state: {
-          address: address.data.data,
-        },
-      });
+      axiosAddBuilding(addressObj)
+        .then((res) => {
+          console.log("res", res);
+          navigate("/posts", {
+            state: {
+              address: res.data.data,
+            },
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     } catch (err) {
       console.log(err);
     }

@@ -10,7 +10,7 @@ import PurpleButton from "@elem/button/PurpleButton";
 import InputWithIcon from "@elem/input/InputWithIcon";
 import HeightBox from "@elem/HeightBox";
 import { useInput } from "@hooks/useInput";
-import axios from "axios";
+import { axiosLogin } from "@api/users";
 
 const Body = () => {
   const [user, onChange] = useInput({
@@ -24,22 +24,11 @@ const Body = () => {
       password: user.password,
     };
     try {
-      const response = await axios.post(
-        "http://localhost:3018/api/login",
-        userObj,
-        {
-          withCredentials: true,
-        }
-      );
-      console.log("통신 성공!", response);
+      axiosLogin(userObj);
     } catch (err) {
       console.log("오류 발생!", err);
     }
   };
-
-  // useEffect(() => {
-  //   console.log("user 변경", user);
-  // }, [user]);
 
   return (
     <StyledBody>
