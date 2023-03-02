@@ -3,26 +3,43 @@ import { Box, Checkbox, FormControlLabel } from "@mui/material";
 
 type PropsType = {
   children: string;
-  onChange: React.Dispatch<React.SetStateAction<boolean>>;
-  value?: boolean;
+  setTrueToAll: any;
+  setFalseToAll: any;
+  isChecked: boolean;
+  setIsCheckedAll: any;
 };
 
-const CheckBox = ({ children, onChange, value }: PropsType) => {
+const AllCheckBox = ({
+  children,
+  setTrueToAll,
+  setFalseToAll,
+  isChecked,
+  setIsCheckedAll,
+}: PropsType) => {
+  // console.log("v", isChecked);
   return (
     <FormControlLabel
       control={
         <Checkbox
-          // defaultChecked={false}
           sx={{
             "& .MuiSvgIcon-root": {
               fontSize: 25, // checkbox size
               color: "#767676", //custom color
             },
           }}
-          onClick={() => {
-            onChange((prev) => !prev);
+          onChange={(e) => {
+            setIsCheckedAll((prev: any) => !prev);
+
+            const target = e.target as HTMLInputElement;
+            // console.log(target.checked);
+
+            if (target.checked) {
+              setTrueToAll();
+            } else {
+              setFalseToAll();
+            }
           }}
-          checked={value}
+          checked={isChecked}
         />
       }
       label={
@@ -37,4 +54,4 @@ const CheckBox = ({ children, onChange, value }: PropsType) => {
   );
 };
 
-export default CheckBox;
+export default AllCheckBox;

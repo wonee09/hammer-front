@@ -5,16 +5,20 @@ import CheckBox from "@elem/input/CheckBox";
 
 type PropsType = {
   children: string;
+  onChange: React.Dispatch<React.SetStateAction<boolean>>;
+  value: boolean;
 };
 
-const AgreementButton = ({ children }: PropsType) => {
+const AgreementButton = ({ children, onChange, value }: PropsType) => {
   return (
     <StyledContainer>
       <StyledItemButton>
         {children}&nbsp;&nbsp;&nbsp;
         <ArrowForwardIosIcon />
       </StyledItemButton>
-      <CheckBox>동의(필수)</CheckBox>
+      <CheckBox value={value} onChange={onChange}>
+        동의(필수)
+      </CheckBox>
     </StyledContainer>
   );
 };

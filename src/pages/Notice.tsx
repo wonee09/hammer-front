@@ -1,14 +1,14 @@
 import Header from "@components/common/Header";
-import Body from "@components/Post/Body";
+import Body from "@components/Notice/Body";
 import React from "react";
 
-const Post = () => {
+const Notice = () => {
   return (
     <>
-      <Header>게시글</Header>
+      <Header>공지사항</Header>
       <Body />
     </>
   );
 };
 
-export default Post;
+export default Notice;

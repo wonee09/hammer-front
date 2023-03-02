@@ -3,10 +3,11 @@ import styled from "styled-components";
 
 type PropsType = {
   children: string;
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
 };
 
-const PurpleButton = ({ children }: PropsType) => {
-  return <StyledBasicButton>{children}</StyledBasicButton>;
+const PurpleButton = ({ children, onClick }: PropsType) => {
+  return <StyledBasicButton onClick={onClick}>{children}</StyledBasicButton>;
 };
 
 export default PurpleButton;

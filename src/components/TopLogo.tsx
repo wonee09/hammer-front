@@ -1,11 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 
-const Header = () => {
+const TopLogo = () => {
   return <StyledContainer>우리동네 신문고</StyledContainer>;
 };
 
-export default Header;
+export default TopLogo;
 
 const StyledContainer = styled.div`
   background-color: #6a3cb0;

@@ -4,12 +4,16 @@ import styled from "styled-components";
 // custom elements
 import WhiteBackArrowButton from "@elem/button/WhiteBackArrowButton";
 
-const Header = () => {
+type PropsType = {
+  children: string;
+};
+
+const Header = ({ children }: PropsType) => {
   return (
     <StyledHeader>
       <StyledSubHeaderBox>
         <WhiteBackArrowButton />
-        <StyledTitle>우리동네 신문고</StyledTitle>
+        <StyledTitle>{children}</StyledTitle>
       </StyledSubHeaderBox>
     </StyledHeader>
   );

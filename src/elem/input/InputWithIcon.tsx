@@ -2,7 +2,23 @@ import React from "react";
 import Input from "@mui/material/Input";
 import InputAdornment from "@mui/material/InputAdornment";
 
-const InputWithIcon = ({ children, placeholder, type }: any) => {
+type PropsType = {
+  children: any;
+  placeholder: string;
+  type: string;
+  name: string;
+  value: string;
+  onChange: () => void;
+};
+
+const InputWithIcon = ({
+  children,
+  placeholder,
+  type,
+  name,
+  value,
+  onChange,
+}: PropsType) => {
   return (
     <Input
       id="input-with-icon-adornment"
@@ -16,7 +32,10 @@ const InputWithIcon = ({ children, placeholder, type }: any) => {
         fontSize: "16px",
         paddingLeft: "15px",
       }}
+      name={name}
       type={type}
+      value={value}
+      onChange={onChange}
     />
   );
 };

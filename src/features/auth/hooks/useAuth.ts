@@ -5,23 +5,35 @@ import { cookie } from "@utils/cookie";
 
 const useAuth = (auth: any) => {
   const navigate = useNavigate();
-  const token = cookie.get("accessToken"); //cookie에서 accessToken 가져오기
+
+  // accessToken 및 refreshToken 가져오기
+  const accessToken = cookie.get("accessToken"); //cookie에서 accessToken 가져오기
+  const refreshToken = cookie.get("refreshToken"); //cookie에서 refreshToken 가져오기
 
   const authUser = async () => {
     try {
-      await axios.get(`${process.env.REACT_APP_AUTH_API_URL}/user`, {
+      await axios.get(`${process.env.REACT_APP_AUTH_API_URL}/verify-token`, {
         headers: {
           // 브라우저 토큰을 뒤져서 로그인 정보가 존재하는지 확인
-          authorization: `Bearer ${token}`,
+          // authorization: `Bearer ${token}`,
+          accessToken,
+          refreshToken,
         },
       });
     } catch (e: any) {
       // 서버 처리에 따라 달라질 수 있음!
       // 401 에러 : 인증 실패 오류
       // 처리 : 기존 존재하는 쿠키 상의 아이디와 access token 제거 후 login 페이지로 이동
-      if (e.response.status === 401) {
+      // if (e.response.status === 401) {
+
+      console.log("오류내용 => ", e);
+
+      console.log("혹시 여기로 들어왔나?");
+
+      if (e.response.status === 400) {
         cookie.remove("id");
         cookie.remove("accessToken");
+        cookie.remove("refreshToken");
         window.alert("로그인이 필요합니다.");
         navigate("/login");
       }
@@ -29,7 +41,7 @@ const useAuth = (auth: any) => {
   };
 
   const notAccessHandler = () => {
-    if (token) {
+    if (accessToken) {
       window.alert("이미 로그인 했습니다.");
       navigate("/");
     }
@@ -40,10 +52,10 @@ const useAuth = (auth: any) => {
     if (auth === "notAccess") notAccessHandler();
     else if (auth === "private") authUser();
     else throw new Error("private 또는 NotAccess를 입력해주세요.");
-  }, [token]); //dependency array에 auth가 포함돼야 하는 이유는 모르겠음
+  }, [auth, accessToken]); //dependency array에 auth가 포함돼야 하는 이유는 모르겠음
   // }, [auth, token]);
 
-  return { isLogin: Boolean(token) };
+  return { isLogin: Boolean(accessToken) };
 };
 
 export default useAuth;

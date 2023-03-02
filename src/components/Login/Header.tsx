@@ -21,7 +21,7 @@ const StyledHeader = styled.header`
   padding-bottom: 19px;
   background-color: #6a3cb0;
   width: 100%;
-  height: 120px;
+  height: 71px;
 
   // header 내부 폰트 정의
   font-family: "Noto Sans KR";

@@ -1,7 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 
-const HeightBox = ({ height }: any) => {
+type PropsType = {
+  height: string;
+};
+
+const HeightBox = ({ height }: PropsType) => {
   return <StHeightBox height={height} />;
 };
 

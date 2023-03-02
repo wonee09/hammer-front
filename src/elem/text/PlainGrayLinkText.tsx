@@ -1,12 +1,23 @@
 import React from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 type PropsType = {
   children: string;
+  linkTo: string;
 };
 
-const PlainGrayLinkText = ({ children }: PropsType) => {
-  return <StyledPlainGrayLinkText>{children}</StyledPlainGrayLinkText>;
+const PlainGrayLinkText = ({ children, linkTo }: PropsType) => {
+  const navigator = useNavigate();
+  return (
+    <StyledPlainGrayLinkText
+      onClick={() => {
+        navigator(`/${linkTo}`);
+      }}
+    >
+      {children}
+    </StyledPlainGrayLinkText>
+  );
 };
 
 export default PlainGrayLinkText;

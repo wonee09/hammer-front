@@ -1,28 +1,81 @@
-import React from "react";
+import React, { useState } from "react";
 // 3rd parties
 import styled from "styled-components";
 import { Box, Checkbox, FormControlLabel } from "@mui/material";
 import HeightBox from "@elem/HeightBox";
 import AgreementButton from "@components/SignUp/AgreementButton";
-import PurpleButton from "@elem/button/PurpleButton";
-import CheckBox from "@elem/input/CheckBox";
+import AllCheckBox from "@elem/input/AllCheckBox";
 
-const AgreementArea = () => {
+type PropsType = {
+  isCheckedAll: boolean;
+  setIsCheckedAll: React.Dispatch<React.SetStateAction<boolean>>;
+  isCheckedTermsOfUse: boolean;
+  setIsCheckedTermsOfUse: React.Dispatch<React.SetStateAction<boolean>>;
+  isCheckedTermsOfPrivacy: boolean;
+  setIsCheckedTermsOfPrivacy: React.Dispatch<React.SetStateAction<boolean>>;
+  isCheckedTermsOfLocation: boolean;
+  setIsCheckedTermsOfLocation: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const AgreementArea = ({
+  isCheckedAll,
+  setIsCheckedAll,
+  isCheckedTermsOfUse,
+  setIsCheckedTermsOfUse,
+  isCheckedTermsOfPrivacy,
+  setIsCheckedTermsOfPrivacy,
+  isCheckedTermsOfLocation,
+  setIsCheckedTermsOfLocation,
+}: PropsType) => {
+  // 모든 체크박스를 true로 변경
+  const setTrueToAll = () => {
+    setIsCheckedTermsOfUse(true);
+    setIsCheckedTermsOfPrivacy(true);
+    setIsCheckedTermsOfLocation(true);
+  };
+
+  // 모든 체크박스를 false로 변경
+  const setFalseToAll = () => {
+    setIsCheckedTermsOfUse(false);
+    setIsCheckedTermsOfPrivacy(false);
+    setIsCheckedTermsOfLocation(false);
+  };
+
   return (
     <>
       <StyledAgreementHeader>
         <StyledHeaderText>약관동의</StyledHeaderText>
-        <CheckBox>전체동의</CheckBox>
+        <AllCheckBox
+          isChecked={isCheckedAll}
+          setIsCheckedAll={setIsCheckedAll}
+          setTrueToAll={setTrueToAll}
+          setFalseToAll={setFalseToAll}
+        >
+          전체선택
+        </AllCheckBox>
       </StyledAgreementHeader>
       <StyledAgreementBody>
-        <AgreementButton>이용약관</AgreementButton>
+        <AgreementButton
+          value={isCheckedTermsOfUse}
+          onChange={setIsCheckedTermsOfUse}
+        >
+          이용약관
+        </AgreementButton>
         <HeightBox height={"18px"} />
-        <AgreementButton>개인정보처리</AgreementButton>
+        <AgreementButton
+          value={isCheckedTermsOfPrivacy}
+          onChange={setIsCheckedTermsOfPrivacy}
+        >
+          개인정보처리
+        </AgreementButton>
         <HeightBox height={"18px"} />
-        <AgreementButton>이용약관</AgreementButton>
+        <AgreementButton
+          value={isCheckedTermsOfLocation}
+          onChange={setIsCheckedTermsOfLocation}
+        >
+          위치기반서비스
+        </AgreementButton>
       </StyledAgreementBody>
-      <HeightBox height={"25px"} />
-      <PurpleButton>이메일 인증하기</PurpleButton>
     </>
   );
 };
