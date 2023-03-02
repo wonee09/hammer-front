@@ -2,7 +2,7 @@ import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useState } from "react";
-import axios from "axios";
+import { axiosAddPost } from "@api/posts";
 
 const Body = () => {
   const location = useLocation();
@@ -24,22 +24,16 @@ const Body = () => {
       likes: 0,
       hits: 0,
     };
-    const response = await axios.post(
-      "http://localhost:3018/api/posts",
-      postObj,
-      {
-        withCredentials: true,
-      }
-    );
 
-    console.log("response => ", response);
-    alert("글쓰기가 성공하였습니다.");
-
-    console.log("글쓰기에서 보낸 address!", address);
-
-    navigate("/posts", {
-      state: { address },
-    });
+    try {
+      axiosAddPost(postObj);
+      alert("글쓰기가 성공하였습니다.");
+      navigate("/posts", {
+        state: { address },
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (

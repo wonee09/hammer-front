@@ -1,6 +1,13 @@
 import axios from "axios";
 
-const getPosts = async (id: string, searchValue: string) => {
+/**
+ * @author Jay
+ * @description 게시글 목록 조회
+ * @param id
+ * @param searchValue
+ * @returns 게시글 목록
+ */
+const axiosGetPosts = async (id: string, searchValue: string) => {
   const response = await axios.get(
     `${process.env.REACT_APP_AUTH_API_URL}/posts`,
 
@@ -16,27 +23,14 @@ const getPosts = async (id: string, searchValue: string) => {
   return response.data.data;
 };
 
-const getComments = async (postId: string) => {
-  const response = await axios.get(
-    `${process.env.REACT_APP_AUTH_API_URL}/comments/${postId}`,
-    { withCredentials: true }
-  );
-
-  return response.data.data;
-};
-
-const addComment = async (commentObj: any) => {
+const axiosAddPost = async (postObj: any) => {
   const response = await axios.post(
-    "http://localhost:3018/api/comment",
-    commentObj,
+    `${process.env.REACT_APP_AUTH_API_URL}/posts`,
+    postObj,
     {
       withCredentials: true,
     }
   );
-
-  console.log("response1231232", response.data.data);
-
-  return response.data.data;
 };
 
-export { getPosts, getComments, addComment };
+export { axiosGetPosts, axiosAddPost };

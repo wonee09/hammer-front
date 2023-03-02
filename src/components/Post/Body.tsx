@@ -2,18 +2,18 @@ import HeightBox from "@elem/HeightBox";
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import axios from "axios";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { getComments, addComment } from "@api/posts";
+import { axiosGetComments, axiosAddComment } from "@api/comments";
 
 const Body = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
   const queryClient = useQueryClient();
-  const { mutate, data: mutationData } = useMutation(addComment, {
+  const { mutate, data: mutationData } = useMutation(axiosAddComment, {
     onSuccess: () => {
       queryClient.invalidateQueries("comments");
+      setComment("");
     },
   });
 
@@ -26,7 +26,7 @@ const Body = () => {
   console.log("아이템 상세 : ", item);
 
   const { isLoading, isError, data } = useQuery("comments", () =>
-    getComments(item.id)
+    axiosGetComments(item.id)
   );
 
   if (isLoading) {
