@@ -28,8 +28,6 @@ const useAuth = (auth: any) => {
 
       console.log("오류내용 => ", e);
 
-      console.log("혹시 여기로 들어왔나?");
-
       if (e.response.status === 400) {
         cookie.remove("id");
         cookie.remove("accessToken");

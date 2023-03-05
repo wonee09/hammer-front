@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { axiosGetComments, axiosAddComment } from "@api/comments";
+import { axiosDeletePost } from "@api/posts";
 
 const Body = () => {
   const location = useLocation();
@@ -21,10 +22,6 @@ const Body = () => {
   const item = location.state.item;
 
   const [comment, setComment] = useState("");
-
-  console.log("게시글 상세 : ", address);
-  console.log("아이템 상세 : ", item);
-
   const { isLoading, isError, data } = useQuery("comments", () =>
     axiosGetComments(item.id)
   );
@@ -36,8 +33,6 @@ const Body = () => {
   if (isError) {
     return <div>댓글을 불러오는 데에 오류가 발생하였습니다.</div>;
   }
-
-  console.log("data", data);
 
   return (
     <StyledBody>
@@ -62,8 +57,52 @@ const Body = () => {
       <StyledContents>{item.contents}</StyledContents>
       <HeightBox height={"20px"} />
       <span style={{ color: "#767676" }}>
-        조회수 {item.hits} | {item.createdAt} | 수정 |{" "}
-        <span style={{ color: "red" }}>삭제</span>
+        조회수 {item.hits} | {item.createdAt} |{" "}
+        <span
+          style={{
+            cursor: "pointer",
+          }}
+          onClick={() => {
+            // 넘길 내용 : item 객체와 address 객체
+            navigate(`/post/modify/${item.id}`, {
+              state: {
+                item,
+                address,
+              },
+            });
+          }}
+        >
+          수정
+        </span>{" "}
+        |{" "}
+        <span
+          style={{ color: "red", cursor: "pointer" }}
+          onClick={() => {
+            const isConfirmed = window.confirm(
+              "삭제하면 되돌릴 수 없습니다. 게속하시겠습니까?"
+            );
+            if (isConfirmed) {
+              axiosDeletePost(item.id)
+                .then((res) => {
+                  alert(
+                    "삭제처리가 완료되었습니다. Search페이지로(협의 필요)."
+                  );
+                  navigate("/search");
+                })
+                .catch((err) => {
+                  console.log(
+                    "삭제처리 중 오류가 발생하였습니다. 오류내용 : ",
+                    err
+                  );
+                });
+              // alert("COMPONENT");
+            } else {
+              return;
+            }
+          }}
+        >
+          삭제
+        </span>
       </span>
       <HeightBox height={"10px"} />
       <StyledP>댓글 0</StyledP>
