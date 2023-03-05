@@ -14,6 +14,7 @@ import RequestBuildingRegister from "@pages/RequestBuildingRegister";
 import SendAuthMail from "@pages/SendAuthMail";
 import SearchBuilding from "@pages/SearchBuilding";
 import Notice from "@pages/Notice";
+import ModifyPost from "@pages/ModifyPost";
 
 const Router = () => {
   return (
@@ -35,6 +36,7 @@ const Router = () => {
           <Route path="/posts/:id" element={<Post />} />
           <Route path="/posts" element={<PostList />} />
           <Route path="/search" element={<SearchBuilding />} />
+          <Route path="/post/modify/:id" element={<ModifyPost />} />
           <Route
             path="/buidling/request"
             element={<RequestBuildingRegister />}

@@ -33,4 +33,25 @@ const axiosAddPost = async (postObj: any) => {
   );
 };
 
-export { axiosGetPosts, axiosAddPost };
+const axiosModifyPost = async (postObj: any) => {
+  const response = await axios.patch(
+    `${process.env.REACT_APP_AUTH_API_URL}/posts/${postObj.id}`,
+    postObj,
+    {
+      withCredentials: true,
+    }
+  );
+};
+
+const axiosDeletePost = async (postId: string) => {
+  const response = await axios.delete(
+    `${process.env.REACT_APP_AUTH_API_URL}/posts/${postId}`,
+    {
+      withCredentials: true,
+    }
+  );
+
+  return response;
+};
+
+export { axiosGetPosts, axiosAddPost, axiosModifyPost, axiosDeletePost };
