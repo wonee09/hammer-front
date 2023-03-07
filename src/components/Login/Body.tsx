@@ -12,22 +12,35 @@ import HeightBox from "@elem/HeightBox";
 import { useInput } from "@hooks/useInput";
 import { axiosLogin } from "@api/users";
 
+import { userState } from "@recoil/atom";
+import { useRecoilState } from "recoil";
+import { useNavigate } from "react-router-dom";
+
 const Body = () => {
+  const navigate = useNavigate();
   const [user, onChange] = useInput({
     email: "",
     password: "",
   });
+
+  const [responseUser, setResponseUser] = useRecoilState(userState);
 
   const login = async () => {
     const userObj = {
       email: user.email,
       password: user.password,
     };
-    try {
-      axiosLogin(userObj);
-    } catch (err) {
-      console.log("오류 발생!", err);
-    }
+    axiosLogin(userObj)
+      .then((res) => {
+        alert("로그인 성공");
+        console.log("res => ", res.data.data);
+
+        setResponseUser(res.data.data);
+        navigate("/search");
+      })
+      .catch((err) => {
+        alert("로그인 오류가 발생하였습니다. 고객센터로 연락주세요.");
+      });
   };
 
   return (

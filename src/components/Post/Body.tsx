@@ -4,24 +4,49 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { axiosGetComments, axiosAddComment } from "@api/comments";
-import { axiosDeletePost } from "@api/posts";
+import { axiosDeletePost, axiosPlusHits } from "@api/posts";
+import { useRecoilState } from "recoil";
+import { userState } from "@recoil/atom";
+import { useEffect } from "react";
 
 const Body = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
   const queryClient = useQueryClient();
-  const { mutate, data: mutationData } = useMutation(axiosAddComment, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("comments");
-      setComment("");
-    },
-  });
+
+  // 조회수증가뮤테이트
+  const { mutate: plusHitsMutate, data: plusHitsMutationData } = useMutation(
+    axiosPlusHits,
+    {
+      onSuccess: () => {
+        // 조회수가 갱신되면 postList를 invalidate 해야 뒤로가기 했을 때도 리렌더링
+        queryClient.invalidateQueries("postList");
+      },
+    }
+  );
+
+  // 댓글추가뮤테이트
+  const { mutate: addCommentMutate, data: addCommentMutationData } =
+    useMutation(axiosAddComment, {
+      onSuccess: () => {
+        queryClient.invalidateQueries("comments");
+        setComment("");
+      },
+    });
 
   const address = location.state.address;
   const item = location.state.item;
 
+  // recoil test
+  const [user, setUser] = useRecoilState(userState);
   const [comment, setComment] = useState("");
+
+  useEffect(() => {
+    // 최초 온로드 시, 조회 수 증가 로직 호출
+    plusHitsMutate(item.id);
+  }, []);
+
   const { isLoading, isError, data } = useQuery("comments", () =>
     axiosGetComments(item.id)
   );
@@ -56,54 +81,74 @@ const Body = () => {
       <HeightBox height={"10px"} />
       <StyledContents>{item.contents}</StyledContents>
       <HeightBox height={"20px"} />
-      <span style={{ color: "#767676" }}>
-        조회수 {item.hits} | {item.createdAt} |{" "}
-        <span
-          style={{
-            cursor: "pointer",
-          }}
-          onClick={() => {
-            // 넘길 내용 : item 객체와 address 객체
-            navigate(`/post/modify/${item.id}`, {
-              state: {
-                item,
-                address,
-              },
-            });
-          }}
-        >
-          수정
-        </span>{" "}
-        |{" "}
-        <span
-          style={{ color: "red", cursor: "pointer" }}
-          onClick={() => {
-            const isConfirmed = window.confirm(
-              "삭제하면 되돌릴 수 없습니다. 게속하시겠습니까?"
-            );
-            if (isConfirmed) {
-              axiosDeletePost(item.id)
-                .then((res) => {
-                  alert(
-                    "삭제처리가 완료되었습니다. Search페이지로(협의 필요)."
-                  );
-                  navigate("/search");
-                })
-                .catch((err) => {
-                  console.log(
-                    "삭제처리 중 오류가 발생하였습니다. 오류내용 : ",
-                    err
-                  );
-                });
-              // alert("COMPONENT");
-            } else {
-              return;
-            }
-          }}
-        >
-          삭제
+
+      {/* 로그인 한 유저의 글인 경우와 아닌 경우로 나누어 span 표기 */}
+
+      {item.writerId !== user.id ? (
+        // 로그인 한 고객의 게시물인 경우
+        <span style={{ color: "#767676" }}>
+          조회수 {item.hits} | {item.createdAt} |{" "}
+          <span
+            style={{
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              // 넘길 내용 : item 객체와 address 객체
+              navigate(`/post/modify/${item.id}`, {
+                state: {
+                  item,
+                  address,
+                },
+              });
+            }}
+          >
+            수정
+          </span>{" "}
+          |{" "}
+          <span
+            style={{ color: "red", cursor: "pointer" }}
+            onClick={() => {
+              const isConfirmed = window.confirm(
+                "삭제하면 되돌릴 수 없습니다. 게속하시겠습니까?"
+              );
+              if (isConfirmed) {
+                axiosDeletePost(item.id)
+                  .then((res) => {
+                    alert(
+                      "삭제처리가 완료되었습니다. Search페이지로(협의 필요)."
+                    );
+                    navigate("/search");
+                  })
+                  .catch((err) => {
+                    console.log(
+                      "삭제처리 중 오류가 발생하였습니다. 오류내용 : ",
+                      err
+                    );
+                  });
+                // alert("COMPONENT");
+              } else {
+                return;
+              }
+            }}
+          >
+            삭제
+          </span>
         </span>
-      </span>
+      ) : (
+        // 로그인 한 고객의 게시물이 아닌 경우
+        <span style={{ color: "#767676" }}>
+          {item.writerId} | 조회수 {item.hits} | {item.createdAt} |{" "}
+          <span style={{ color: "#6A3CB0" }}>공감 {item.likes}</span> |{" "}
+          <span
+            style={{
+              color: "red",
+            }}
+          >
+            신고
+          </span>
+        </span>
+      )}
+
       <HeightBox height={"10px"} />
       <StyledP>댓글 0</StyledP>
       <HeightBox height={"5px"} />
@@ -122,7 +167,7 @@ const Body = () => {
           };
 
           try {
-            mutate(commentObj);
+            addCommentMutate(commentObj);
           } catch (err) {
             console.log("err");
           }

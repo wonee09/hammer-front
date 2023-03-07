@@ -13,7 +13,8 @@
       "@utils/*": ["src/utils/*"],
       "@styles/*": ["src/styles/*"],
       "@api/*": ["src/api/*"],
-      "@contexts/*": ["src/contexts/*"]
+      "@contexts/*": ["src/contexts/*"],
+      "@recoil/*": ["src/recoil/*"]
     }
   }
 }
