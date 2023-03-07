@@ -30,8 +30,7 @@ const Router = () => {
           }
         >
           {/* 중첩 라우팅 */}
-          {/* <Route index element={<Main />} /> */}
-          <Route index element={<SearchBuilding />} />
+          <Route index element={<Main />} />
           <Route path="/post/add" element={<AddPost />} />
           <Route path="/post/edit" element={<EditPost />} />
           <Route path="/posts/:id" element={<Post />} />

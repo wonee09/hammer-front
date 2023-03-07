@@ -7,9 +7,11 @@ import axios from "axios";
  */
 const axiosGetBuildings = async () => {
   const response = await axios.get(
-    `${process.env.REACT_APP_API_URL}/buildings`
+    `${process.env.REACT_APP_AUTH_API_URL}/buildings`
   );
-  return response.data;
+
+  // 빌딩의 post가 존재하는 전체 building의 xLoc와 yLoc를 가지고 오믄 될 듯
+  return response.data.data;
 };
 
 /**
@@ -21,10 +23,7 @@ const axiosGetBuildings = async () => {
 const axiosAddBuilding = async (addressObj: any) => {
   const address = await axios.post(
     "http://localhost:3018/api/address",
-    addressObj,
-    {
-      withCredentials: true,
-    }
+    addressObj
   );
 
   return address;
