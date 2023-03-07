@@ -6,8 +6,11 @@ import { axiosGetBuildings } from "@api/building";
 import { useMutation, useQuery } from "react-query";
 import { Map, MapMarker, CustomOverlayMap } from "react-kakao-maps-sdk";
 import CloseIcon from "@mui/icons-material/Close";
+import { useNavigate } from "react-router-dom";
 
 const Body = () => {
+  const navigate = useNavigate();
+
   const { isLoading, isError, data, error } = useQuery(
     "buildings",
     axiosGetBuildings
@@ -19,13 +22,6 @@ const Body = () => {
     // 지도 위치 변경시 panto를 이용할지에 대해서 정의
     isPanto: true,
   });
-
-  // mutation 작업은 나중에
-  // const mutation = useMutation(async () => {}, {
-  //   onSuccess: () => {
-  //     console.log("...");
-  //   },
-  // });
 
   // 마커 선택 시 관리하기 위한 state정의
   const [selectedMakerId, setSelectedMarkerId] = useState("");
@@ -50,19 +46,19 @@ const Body = () => {
         style={{ width: "100%", height: "96.5vh" }}
         level={3}
       >
-        {data.map((item: any) => {
+        {data.data.map((item: any) => {
           const adjustedLocation = {
-            lat: item.lat + 0.0005,
-            lng: item.lng - 0.0015,
+            lat: Number(item.yLoc) + 0.0005,
+            lng: Number(item.xLoc) - 0.0015,
           };
           return (
-            <>
+            <div key={item.id}>
               <MapMarker // 마커를 생성합니다
                 key={item.id}
                 position={{
                   // 마커가 표시될 위치입니다
-                  lat: item.lat,
-                  lng: item.lng,
+                  lat: Number(item.yLoc),
+                  lng: Number(item.xLoc),
                 }}
                 image={{
                   src: require("@assets/marker.png"), // 마커이미지의 주소입니다
@@ -80,8 +76,8 @@ const Body = () => {
                 onClick={() => {
                   setState({
                     center: {
-                      lat: item.lat,
-                      lng: item.lng,
+                      lat: Number(item.yLoc),
+                      lng: Number(item.xLoc),
                     },
                     isPanto: true,
                   });
@@ -112,7 +108,7 @@ const Body = () => {
                   ""
                 )}
               </CustomOverlayMap>
-            </>
+            </div>
           );
         })}
       </Map>
@@ -123,6 +119,10 @@ const Body = () => {
           style={{
             width: "100%",
             height: "100%",
+            cursor: "pointer",
+          }}
+          onClick={() => {
+            navigate("/search");
           }}
         />
       </StyledNewPostButton>

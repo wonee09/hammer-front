@@ -1,8 +1,21 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const TopLogo = () => {
-  return <StyledContainer>우리동네 신문고</StyledContainer>;
+  const navigate = useNavigate();
+  return (
+    <StyledContainer
+      onClick={() => {
+        navigate("/");
+      }}
+      style={{
+        cursor: "pointer",
+      }}
+    >
+      우리동네 신문고
+    </StyledContainer>
+  );
 };
 
 export default TopLogo;
