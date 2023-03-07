@@ -5,9 +5,14 @@ import styled from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { axiosAddBuilding } from "@api/building";
+import { userState } from "@recoil/atom";
+import { useRecoilState } from "recoil";
 
 const Body = () => {
   const navigate = useNavigate();
+
+  const [user, setUser] = useRecoilState(userState);
+  console.log("userState", user);
 
   const handleComplete = async (data: any) => {
     // 의미 있는 데이터로 좀 바꾸긴 해야할 것 같다.

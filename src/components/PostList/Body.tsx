@@ -2,15 +2,19 @@ import HeightBox from "@elem/HeightBox";
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { axiosGetPosts } from "@api/posts";
+import { axiosHandleLikes } from "@api/likes";
 import { useEffect } from "react";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 const Body = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
   const address = location.state.address;
+  const queryClient = useQueryClient();
 
   const formatDate = (str: string) => {
     let result = str.substring(0, 20);
@@ -22,6 +26,27 @@ const Body = () => {
     alert("올바르지 않은 접근입니다. 주소검색 페이지로 이동할게요!");
     navigate("/search");
   }
+
+  // 좋아요 뮤테이트
+  // axiosHandleLikes -> postId, likeYn
+  const { mutate: likesMutate, data: likesMutationData } = useMutation(
+    axiosHandleLikes,
+    {
+      onSuccess: () => {
+        // 조회수가 갱신되면 postList를 invalidate 해야 뒤로가기 했을 때도 리렌더링
+        queryClient.invalidateQueries("postList");
+      },
+    }
+  );
+
+  // 좋아요 handler
+  const onClicklikeButtonHandler = (itemId: string, likeYn: boolean) => {
+    const likesObj = {
+      postId: itemId,
+      likeYn: likeYn,
+    };
+    likesMutate(likesObj);
+  };
 
   // useQuery를 이용하여 해당 location id의 post list를 읽어옴
   // 1. useQuery : 조회(select)
@@ -90,26 +115,54 @@ const Body = () => {
         ) : (
           <div style={{ height: "550px", overflow: "auto" }}>
             {data.map((item: any) => {
+              // console.log("item", item);
               return (
-                <StyledPostDiv
-                  key={item.id}
-                  onClick={() => {
-                    navigate(`/posts/${item.id}`, {
-                      state: {
-                        address: address,
-                        item,
-                      },
-                    });
-                  }}
-                >
-                  <h4>제목 : {item.title}</h4>
-                  <span>
-                    {item.writerName} | 조회수 : {item.likes} | 댓글수 :{" "}
-                    {item.hits} |&nbsp;
-                    {formatDate(item.createdAt)}
-                  </span>
+                <div key={item.id}>
+                  <StyledPostDiv>
+                    <div
+                      onClick={() => {
+                        navigate(`/posts/${item.id}`, {
+                          state: {
+                            address: address,
+                            item,
+                          },
+                        });
+                      }}
+                      style={{
+                        cursor: "pointer",
+                      }}
+                    >
+                      <h4>제목 : {item.title}</h4>
+                      <span>
+                        {item.writerName} | 조회수 : {item.hits} | 댓글수 :
+                        {item.replyCount} |&nbsp;
+                        {formatDate(item.createdAt)}
+                      </span>
+                    </div>
+                    {item.realLikeYn === false ? (
+                      <FavoriteBorderIcon
+                        style={{
+                          cursor: "pointer",
+                          color: "#6A3CB0",
+                        }}
+                        fontSize="large"
+                        onClick={() => onClicklikeButtonHandler(item.id, true)}
+                      />
+                    ) : (
+                      <FavoriteIcon
+                        style={{
+                          cursor: "pointer",
+                          color: "#6A3CB0",
+                          border: "0",
+                        }}
+                        fontSize="large"
+                        onClick={() => onClicklikeButtonHandler(item.id, false)}
+                      />
+                    )}
+                  </StyledPostDiv>
+
                   <hr />
-                </StyledPostDiv>
+                </div>
               );
             })}
           </div>
@@ -158,7 +211,9 @@ const StyledWriteButton = styled.button`
 
 const StyledPostDiv = styled.div`
   padding: 10px;
-  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
   h4 {
     font-size: 15px;

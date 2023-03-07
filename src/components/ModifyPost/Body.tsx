@@ -21,15 +21,17 @@ const Body = () => {
       contents,
     };
 
-    try {
-      axiosModifyPost(postObj);
-      alert("글 수정에 성공하였습니다.");
-      navigate("/posts", {
-        state: { address },
+    axiosModifyPost(postObj)
+      .then((res) => {
+        alert("글 수정에 성공하였습니다.");
+        navigate("/posts", {
+          state: { address },
+        });
+      })
+      .catch((err) => {
+        alert("글 수정에 실패하였습니다. 고객센터로 연락주세요.");
+        console.log("오류가 발생하였습니다. 오류내용 : ", err);
       });
-    } catch (err) {
-      console.log(err);
-    }
   };
 
   return (
